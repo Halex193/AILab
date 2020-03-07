@@ -6,3 +6,4 @@ if __name__ == '__main__':
     problem = Problem()
     controller = Controller(problem)
     ui = UI(controller)
+    ui.run()
