@@ -1,5 +1,6 @@
 from copy import copy, deepcopy
 
+from Lab2.configuration import Configuration
 from Lab2.state import State
 
 
@@ -11,70 +12,66 @@ class Problem:
     def setN(self, n):
         self.n = n
 
-    def expandState(self, state):
-        board = state.lastBoard()
+    def expandState(self, state: State):
+        configuration = state.lastConfiguration()
+        if len(configuration.queens) >= self.n:
+            return []
+
         newStates = []
         for i in range(self.n):
             for j in range(self.n):
-                if board[i][j] == 0:
-                    newBoard = deepcopy(board)
-                    newBoard[i][j] = 1
-                    newStates.append(copy(state) + newBoard)
+                if (i, j) not in configuration.queens:
+                    newConfiguration = deepcopy(configuration)
+                    newConfiguration = newConfiguration + (i, j)
+                    newStates.append(copy(state) + newConfiguration)
         return newStates
 
     def heuristic(self, state):
         score = 0
-        board = state.lastBoard()
+        queens = state.lastConfiguration().queens
         for i in range(self.n):
             count = 0
-            for j in range(self.n):
-                count += board[i][j]
+            for queen in queens:
+                if queen[0] == i:
+                    count += 1
             if count != 1:
                 score += 1
         for j in range(self.n):
             count = 0
-            for i in range(self.n):
-                count += board[i][j]
+            for queen in queens:
+                if queen[1] == j:
+                    count += 1
             if count != 1:
                 score += 1
-        ones = []
-        for i in range(self.n):
-            for j in range(self.n):
-                if board[i][j] == 1:
-                    ones.append((i, j))
-        for i in range(len(ones)):
-            for j in range(i + 1, len(ones)):
-                if abs(ones[i][0] - ones[j][0]) == abs(ones[i][1] - ones[j][1]):
+        for i in range(len(queens)):
+            for j in range(i + 1, len(queens)):
+                if abs(queens[i][0] - queens[j][0]) == abs(queens[i][1] - queens[j][1]):
                     score += 1
         return score
 
     def checkFinalState(self, state):
-        board = state.lastBoard()
+        queens = state.lastConfiguration().queens
+        if len(queens) != self.n:
+            return False
         for i in range(self.n):
             count = 0
-            for j in range(self.n):
-                count += board[i][j]
+            for queen in queens:
+                if queen[0] == i:
+                    count += 1
             if count != 1:
                 return False
         for j in range(self.n):
             count = 0
-            for i in range(self.n):
-                count += board[i][j]
+            for queen in queens:
+                if queen[1] == j:
+                    count += 1
             if count != 1:
                 return False
-        ones = []
         for i in range(self.n):
-            for j in range(self.n):
-                if board[i][j] == 1:
-                    ones.append((i, j))
-        for i in range(len(ones)):
-            for j in range(i + 1, len(ones)):
-                if abs(ones[i][0] - ones[j][0]) == abs(ones[i][1] - ones[j][1]):
+            for j in range(i + 1, self.n):
+                if abs(queens[i][0] - queens[j][0]) == abs(queens[i][1] - queens[j][1]):
                     return False
         return True
 
     def initialState(self):
-        board = []
-        for i in range(self.n):
-            board.append([0] * self.n)
-        return State() + board
+        return State() + Configuration(self.n)

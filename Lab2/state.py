@@ -1,22 +1,22 @@
 class State:
     def __init__(self):
-        self.boards = []
+        self.configurations = []
 
-    def __add__(self, board):
-        self.boards.append(board)
+    def __add__(self, configuration):
+        self.configurations.append(configuration)
         return self
 
     def __copy__(self):
         state = State()
-        state.boards = self.boards[:]
+        state.configurations = self.configurations[:]
         return state
 
     def __str__(self):
         string = ""
-        for board in self.boards:
-            string += '\n'.join([''.join(['{:2}'.format(item) for item in row]) for row in board])
-            string += "\n-------------------------\n"
+        for configuration in self.configurations:
+            string += str(configuration)
+            string += "--------------------\n"
         return string
 
-    def lastBoard(self):
-        return self.boards[-1]
+    def lastConfiguration(self):
+        return self.configurations[-1]

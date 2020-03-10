@@ -1,4 +1,5 @@
 from Lab2.problem import Problem
+from Lab2.state import State
 
 
 class Controller:
@@ -21,16 +22,10 @@ class Controller:
         return None
 
     def greedy(self):
-        visited = []
-        toVisit = [self.problem.initialState()]
-        while len(toVisit) > 0:
-            state = toVisit.pop(0)
-            visited.append(state.lastBoard())
+        toCheck = [self.problem.initialState()]
+        while len(toCheck) > 0:
+            state = toCheck.pop(0)
             if self.problem.checkFinalState(state):
                 return state
-            aux = []
-            for x in self.problem.expandState(state):
-                if x.lastBoard() not in visited:
-                    aux.append(x)
-            toVisit = self.orderStates(aux) + toVisit
+            toCheck = self.orderStates(self.problem.expandState(state))
         return None
