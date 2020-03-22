@@ -23,10 +23,15 @@ class MainWindow(QMainWindow):
 
         layout = QVBoxLayout(self)
         hillClimbingButton = QPushButton('Hill Climbing')
+        hillClimbingButton.setMinimumHeight(100)
         hillClimbingButton.clicked.connect(self.openHillClimbing)
+
         eaButton = QPushButton('Evolutionary Algorithm')
+        eaButton.setMinimumHeight(100)
         eaButton.clicked.connect(self.openEA)
+
         psoButton = QPushButton('Particle Swarm Optimisation ')
+        psoButton.setMinimumHeight(100)
         psoButton.clicked.connect(self.openPSO)
 
         layout.addWidget(hillClimbingButton)

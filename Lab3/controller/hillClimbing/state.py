@@ -45,13 +45,13 @@ class State:
         for j in range(self.n):
             penalty += self.checkColumn(j, 0)
             penalty += self.checkColumn(j, 1)
-            penalty += self.checkCells()
+        penalty += self.checkCells()
         return penalty
 
-    def checkColumn(self, i, dimension):
+    def checkColumn(self, j, dimension):
         penalty = 0
         numbers = {}
-        for j in range(self.n):
+        for i in range(self.n):
             number = self.board[i][j][dimension]
             if number not in numbers:
                 numbers[number] = 0
@@ -59,10 +59,10 @@ class State:
                 penalty += 1
         return penalty
 
-    def checkLine(self, j, dimension):
+    def checkLine(self, i, dimension):
         penalty = 0
         numbers = {}
-        for i in range(self.n):
+        for j in range(self.n):
             number = self.board[i][j][dimension]
             if number not in numbers:
                 numbers[number] = 0
