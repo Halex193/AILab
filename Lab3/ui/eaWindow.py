@@ -38,7 +38,7 @@ class EAWindow(QMainWindow):
         label3 = QLabel("Mutation chance:")
         self.mutationChance = QDoubleSpinBox()
         self.mutationChance.setSingleStep(0.01)
-        self.mutationChance.setValue(0.01)
+        self.mutationChance.setValue(0.2)
         data.addWidget(label3)
         data.addWidget(self.mutationChance)
 

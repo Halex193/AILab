@@ -53,7 +53,8 @@ class EAController(QThread):
         return individual
 
     def nextGeneration(self):
-        for i in range(self.populationNumber * 5):
+        newPopulation = []
+        for i in range(self.populationNumber):
             index1 = randint(0, self.populationNumber - 1)
             index2 = randint(0, self.populationNumber - 1)
             if index1 == index2:
@@ -65,17 +66,16 @@ class EAController(QThread):
             child = self.crossover(individual1, individual2)
             child = self.mutation(child, self.mutationChance)
 
-            fitness1 = individual1.fitness(self.maxFitness)
-            fitness2 = individual2.fitness(self.maxFitness)
             childFitness = child.fitness(self.maxFitness)
-
-            if fitness1 < fitness2 and fitness1 < childFitness:
-                self.population[index1] = child
-            elif fitness2 < fitness1 and fitness2 < childFitness:
-                self.population[index2] = child
 
             if childFitness > self.best[1]:
                 self.best = (child, childFitness)
+            newPopulation.append(child)
+
+        self.population += newPopulation
+        aux = [(x, x.fitness(self.maxFitness)) for x in self.population]
+        aux.sort(key=lambda t: t[1], reverse=True)
+        self.population = [x[0] for x in aux[:self.populationNumber]]
 
     def run(self):
         generation = 0
