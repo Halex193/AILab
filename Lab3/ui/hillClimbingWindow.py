@@ -17,7 +17,7 @@ class HillClimbingWindow(QMainWindow):
         self.center()
 
         self.sp = QSpinBox()
-        self.sp.setValue(4)
+        self.sp.setValue(5)
         layout = QVBoxLayout()
         layout.addWidget(self.sp)
 
@@ -42,6 +42,8 @@ class HillClimbingWindow(QMainWindow):
         self.setCentralWidget(widget)
 
     def beginAlg(self):
+        if self.controller is not None:
+            self.controller.requestInterruption()
         self.controller = HillClimbingController(self.sp.value())
         self.controller.progress.connect(self.progress)
         self.controller.start()

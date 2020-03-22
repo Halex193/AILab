@@ -36,9 +36,14 @@ class HillClimbingController(QThread):
 
     def nextGeneration(self):
         states = self.state.adjacentStates()
-        self.state = self.orderStates(states)[0]
+        candidate = self.orderStates(states)[0]
+        if candidate.fitness(self.maxFitness) > self.state.fitness(self.maxFitness):
+            self.state = candidate
+        else:
+            self.requestInterruption()
 
     def run(self):
         while not self.isInterruptionRequested():
             self.progress.emit(self.state.fitness(self.maxFitness), str(self.state))
             self.nextGeneration()
+

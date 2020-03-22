@@ -1,8 +1,6 @@
 import sys
 
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QApplication, QWidget, QToolTip, QPushButton, QDesktopWidget, QMainWindow, QVBoxLayout, \
-    QHBoxLayout
+from PyQt5.QtWidgets import *
 
 from Lab3.ui.eaWindow import EAWindow
 from Lab3.ui.hillClimbingWindow import HillClimbingWindow
@@ -23,7 +21,7 @@ class MainWindow(QMainWindow):
         self.center()
         self.setWindowTitle('AI')
 
-        layout = QHBoxLayout(self)
+        layout = QVBoxLayout(self)
         hillClimbingButton = QPushButton('Hill Climbing')
         hillClimbingButton.clicked.connect(self.openHillClimbing)
         eaButton = QPushButton('Evolutionary Algorithm')

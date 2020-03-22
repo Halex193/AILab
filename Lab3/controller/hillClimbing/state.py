@@ -16,7 +16,7 @@ class State:
                     newBoard = deepcopy(self.board)
                     newBoard[i][j] = (value1 - 1, pair[1])
                     states.append(State(self.n, newBoard))
-                if value1 + 1 > 0:
+                if value1 + 1 <= self.n:
                     newBoard = deepcopy(self.board)
                     newBoard[i][j] = (value1 + 1, pair[1])
                     states.append(State(self.n, newBoard))
@@ -26,7 +26,7 @@ class State:
                     newBoard = deepcopy(self.board)
                     newBoard[i][j] = (pair[0], value2 - 1)
                     states.append(State(self.n, newBoard))
-                if value2 + 1 > 0:
+                if value2 + 1 <= self.n:
                     newBoard = deepcopy(self.board)
                     newBoard[i][j] = (pair[0], value2 + 1)
                     states.append(State(self.n, newBoard))
@@ -57,7 +57,6 @@ class State:
                 numbers[number] = 0
             else:
                 penalty += 1
-                break
         return penalty
 
     def checkLine(self, j, dimension):
@@ -69,7 +68,6 @@ class State:
                 numbers[number] = 0
             else:
                 penalty += 1
-                break
         return penalty
 
     def checkCells(self):
@@ -88,6 +86,6 @@ class State:
         string = ""
         for i in range(self.n):
             for j in range(self.n):
-                string += str(self.board[i][j])
+                string += str(self.board[i][j]) + " "
             string += "\n"
         return string
