@@ -30,12 +30,14 @@ class EAWindow(QMainWindow):
 
         label2 = QLabel("Population size:")
         self.populationSize = QSpinBox()
+        self.populationSize.setMaximum(200)
         self.populationSize.setValue(40)
         data.addWidget(label2)
         data.addWidget(self.populationSize)
 
         label3 = QLabel("Mutation chance:")
         self.mutationChance = QDoubleSpinBox()
+        self.mutationChance.setSingleStep(0.01)
         self.mutationChance.setValue(0.01)
         data.addWidget(label3)
         data.addWidget(self.mutationChance)

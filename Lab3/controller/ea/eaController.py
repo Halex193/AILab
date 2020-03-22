@@ -53,31 +53,36 @@ class EAController(QThread):
         return individual
 
     def nextGeneration(self):
-        index1 = randint(0, self.populationNumber - 1)
-        index2 = randint(0, self.populationNumber - 1)
+        for i in range(self.populationNumber * 5):
+            index1 = randint(0, self.populationNumber - 1)
+            index2 = randint(0, self.populationNumber - 1)
+            if index1 == index2:
+                continue
 
-        individual1 = self.population[index1]
-        individual2 = self.population[index2]
+            individual1 = self.population[index1]
+            individual2 = self.population[index2]
 
-        child = self.crossover(individual1, individual2)
-        child = self.mutation(child, self.mutationChance)
+            child = self.crossover(individual1, individual2)
+            child = self.mutation(child, self.mutationChance)
 
-        fitness1 = individual1.fitness(self.maxFitness)
-        fitness2 = individual2.fitness(self.maxFitness)
-        childFitness = child.fitness(self.maxFitness)
+            fitness1 = individual1.fitness(self.maxFitness)
+            fitness2 = individual2.fitness(self.maxFitness)
+            childFitness = child.fitness(self.maxFitness)
 
-        if fitness1 < fitness2 and fitness1 < childFitness:
-            self.population[index1] = child
-        elif fitness2 < fitness1 and fitness2 < childFitness:
-            self.population[index2] = child
+            if fitness1 < fitness2 and fitness1 < childFitness:
+                self.population[index1] = child
+            elif fitness2 < fitness1 and fitness2 < childFitness:
+                self.population[index2] = child
 
-        if childFitness > self.best[1]:
-            self.best = (child, childFitness)
+            if childFitness > self.best[1]:
+                self.best = (child, childFitness)
 
     def run(self):
         generation = 0
         while not self.isInterruptionRequested() and generation < self.generations:
             generation += 1
             self.progress.emit(generation, self.best[1], str(self.best[0]))
+            if self.best[1] == 1:
+                self.requestInterruption()
+                break
             self.nextGeneration()
-            self.best[0].penalty()
