@@ -1,15 +1,56 @@
-from PyQt5.QtWidgets import QDesktopWidget, QMainWindow
+from PyQt5.QtWidgets import *
+
+from Lab3.controller.hillClimbing.hillClimbingController import HillClimbingController
 
 
 class HillClimbingWindow(QMainWindow):
     def __init__(self, parent=None):
         super(HillClimbingWindow, self).__init__(parent)
+        self.sp: QSpinBox = None
+        self.controller: HillClimbingController = None
+        self.console: QTextEdit = None
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle('Hill Climbing')
         self.resize(400, 400)
         self.center()
+
+        self.sp = QSpinBox()
+        self.sp.setValue(4)
+        layout = QVBoxLayout()
+        layout.addWidget(self.sp)
+
+        buttonLayout = QHBoxLayout()
+        button = QPushButton("Begin")
+        button.clicked.connect(self.beginAlg)
+        buttonLayout.addWidget(button)
+
+        cancelButton = QPushButton("Cancel")
+        cancelButton.clicked.connect(self.cancelAlg)
+        buttonLayout.addWidget(cancelButton)
+
+        layout.addLayout(buttonLayout)
+
+        self.console = QTextEdit()
+        self.console.setEnabled(False)
+        self.console.setFontPointSize(20)
+        layout.addWidget(self.console)
+
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
+
+    def beginAlg(self):
+        self.controller = HillClimbingController(self.sp.value())
+        self.controller.progress.connect(self.progress)
+        self.controller.start()
+
+    def progress(self, fitness, board):
+        self.console.setText("Fitness: " + str(fitness) + "\n\n" + str(board))
+
+    def cancelAlg(self):
+        self.controller.requestInterruption()
 
     def center(self):
         qr = self.frameGeometry()
