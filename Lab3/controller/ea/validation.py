@@ -23,6 +23,8 @@ class Validation(QThread):
 
         self.graph.append(mean(self.gatherFitness(simulations)))
         for i in range(self.generations):
+            if self.isInterruptionRequested():
+                return
             for simulation in simulations:
                 simulation.nextGeneration()
             self.graph.append(mean(self.gatherFitness(simulations)))

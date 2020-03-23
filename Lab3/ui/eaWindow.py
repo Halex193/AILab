@@ -17,14 +17,16 @@ class EAWindow(QMainWindow):
         self.console: QTextEdit = None
         self.avg: QLineEdit = None
         self.graphWidget: PlotWidget = None
+        self.std: QLineEdit = None
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle('Evolutionary Algorithm')
-        self.resize(400, 400)
+        self.resize(800, 400)
         self.center()
 
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
+        normalLayout = QVBoxLayout()
         data = QHBoxLayout()
 
         label1 = QLabel("Board size:")
@@ -54,7 +56,7 @@ class EAWindow(QMainWindow):
         data.addWidget(label4)
         data.addWidget(self.generations)
 
-        layout.addLayout(data)
+        normalLayout.addLayout(data)
 
         buttonLayout = QHBoxLayout()
         button = QPushButton("Begin")
@@ -65,27 +67,40 @@ class EAWindow(QMainWindow):
         cancelButton.clicked.connect(self.cancelAlg)
         buttonLayout.addWidget(cancelButton)
 
-        layout.addLayout(buttonLayout)
+        normalLayout.addLayout(buttonLayout)
 
         self.console = QTextEdit()
         self.console.setEnabled(False)
         self.console.setFontPointSize(20)
-        layout.addWidget(self.console)
+        normalLayout.addWidget(self.console)
 
+        bigValidationLayout = QVBoxLayout()
         validationLayout = QHBoxLayout()
         label5 = QLabel("Average fitness: ")
         validationLayout.addWidget(label5)
         self.avg = QLineEdit()
         self.avg.setEnabled(False)
         validationLayout.addWidget(self.avg)
+        label6 = QLabel("Standard deviation of fitness: ")
+        validationLayout.addWidget(label6)
+        self.std = QLineEdit()
+        self.std.setEnabled(False)
+        validationLayout.addWidget(self.std)
         validationButton = QPushButton("Validation")
         validationButton.clicked.connect(self.validate)
         validationLayout.addWidget(validationButton)
-        layout.addLayout(validationLayout)
+        bigValidationLayout.addLayout(validationLayout)
 
         self.graphWidget = pg.PlotWidget()
-        layout.addWidget(self.graphWidget)
+        self.graphWidget.setXRange(0, 1000)
+        self.graphWidget.setYRange(0, 1)
+        self.graphWidget.setLabel('left', "<span style=\"color:purple;font-size:30px\">Fitness</span>")
+        self.graphWidget.setLabel('bottom', "<span style=\"color:purple;font-size:30px\">Generation</span>")
+        self.graphWidget.setBackground('w')
+        bigValidationLayout.addWidget(self.graphWidget)
 
+        layout.addLayout(normalLayout)
+        layout.addLayout(bigValidationLayout)
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
@@ -118,5 +133,8 @@ class EAWindow(QMainWindow):
         self.validation.start()
 
     def validationDone(self, avg, std, graph):
-        self.avg.setText(str(avg))
-        self.graphWidget.plot([i for i in range(len(graph))], graph)
+        self.avg.setText("{:.4f}".format(avg))
+        self.std.setText("{:.4f}".format(std))
+        self.graphWidget.setXRange(0, self.validation.generations)
+        pen = pg.mkPen(color=(60, 0, 60), width=3)
+        self.graphWidget.plot([i for i in range(len(graph))], graph, pen=pen)
