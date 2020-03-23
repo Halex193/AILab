@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 
-from Lab3.controller.hillClimbing.hillClimbingSimulation import HillClimbingSimulation
+from Lab3.simulations.hillClimbing.hillClimbingSimulation import HillClimbingSimulation
 
 
 class HillClimbingWindow(QMainWindow):

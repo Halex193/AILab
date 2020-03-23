@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import *
-from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
-from Lab3.controller.ea.eaSimulation import EASimulation
-from Lab3.controller.ea.validation import Validation
+from PyQt5.QtWidgets import *
+from pyqtgraph import PlotWidget
+
+from Lab3.simulations.ea.eaSimulation import EASimulation
+from Lab3.simulations.ea.validation import Validation
 
 
 class EAWindow(QMainWindow):

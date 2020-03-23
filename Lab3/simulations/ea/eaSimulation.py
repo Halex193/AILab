@@ -4,7 +4,7 @@ from random import random
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from Lab3.controller.ea.individual import Individual
+from Lab3.simulations.ea.individual import Individual
 
 
 class EASimulation(QThread):

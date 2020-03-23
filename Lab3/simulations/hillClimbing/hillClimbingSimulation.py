@@ -1,7 +1,7 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 from qtconsole.qt import QtCore
 
-from Lab3.controller.hillClimbing.state import State
+from Lab3.simulations.hillClimbing.state import State
 from random import randint
 
 

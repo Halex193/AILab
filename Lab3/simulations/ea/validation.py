@@ -2,7 +2,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from numpy import mean
 from numpy import std
 
-from Lab3.controller.ea.eaSimulation import EASimulation
+from Lab3.simulations.ea.eaSimulation import EASimulation
 
 
 class Validation(QThread):
