@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
-
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
 from Lab3.controller.ea.eaSimulation import EASimulation
 from Lab3.controller.ea.validation import Validation
 
@@ -12,8 +13,10 @@ class EAWindow(QMainWindow):
         self.mutationChance: QDoubleSpinBox = None
         self.generations: QSpinBox = None
         self.controller: EASimulation = None
+        self.validation: Validation = None
         self.console: QTextEdit = None
         self.avg: QLineEdit = None
+        self.graphWidget: PlotWidget = None
         self.initUI()
 
     def initUI(self):
@@ -80,6 +83,9 @@ class EAWindow(QMainWindow):
         validationLayout.addWidget(validationButton)
         layout.addLayout(validationLayout)
 
+        self.graphWidget = pg.PlotWidget()
+        layout.addWidget(self.graphWidget)
+
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
@@ -104,10 +110,13 @@ class EAWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    def validationDone(self, avg, std, graph):
-        self.avg.setValue(str(avg))
-
     def validate(self):
-        validation = Validation()
-        validation.done.connect(self.validationDone)
-        validation.start()
+        if self.validation is not None:
+            self.validation.requestInterruption()
+        self.validation = Validation()
+        self.validation.done.connect(self.validationDone)
+        self.validation.start()
+
+    def validationDone(self, avg, std, graph):
+        self.avg.setText(str(avg))
+        self.graphWidget.plot([i for i in range(len(graph))], graph)

@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 from numpy import mean
 from numpy import std
+
 from Lab3.controller.ea.eaSimulation import EASimulation
 
 
@@ -14,20 +15,24 @@ class Validation(QThread):
 
     def __init__(self, parent=None):
         super(Validation, self).__init__(parent)
-        self.fitness = [0] * self.runs
         self.graph = []
 
     def run(self) -> None:
         simulations = [EASimulation(self.boardSize, self.populationSize, self.mutationChance, self.generations)
                        for i in range(self.runs)]
-        for i in range(len(simulations)):
-            simulations[i].progress.connect(lambda generation, fitness, board: self.progress(i, generation, fitness))
-            simulations[i].start()
-        for i in range(len(simulations)):
-            simulations[i].wait()
-        self.done.emit(mean(self.fitness), std(self.fitness), self.graph)
 
-    def progress(self, population, generation, fitness):
-        self.fitness[population] = fitness
-        self.graph.append(mean(self.fitness))
+        self.graph.append(mean(self.gatherFitness(simulations)))
+        for i in range(self.generations):
+            for simulation in simulations:
+                simulation.nextGeneration()
+            self.graph.append(mean(self.gatherFitness(simulations)))
+        fitness = self.gatherFitness(simulations)
+        m = mean(fitness)
+        s = std(fitness)
+        self.done.emit(m, s, self.graph)
 
+    def gatherFitness(self, simulations):
+        fitness = []
+        for simulation in simulations:
+            fitness.append(simulation.best[1])
+        return fitness
