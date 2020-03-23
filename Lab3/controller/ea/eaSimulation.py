@@ -7,11 +7,11 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from Lab3.controller.ea.individual import Individual
 
 
-class EAController(QThread):
+class EASimulation(QThread):
     progress = pyqtSignal(int, float, str)
 
     def __init__(self, n, populationNumber, mutationChance, generations, parent=None):
-        super(EAController, self).__init__(parent)
+        super(EASimulation, self).__init__(parent)
         self.n = n
         self.mutationChance = mutationChance
         self.maxFitness = self.calculateMaxFitness()

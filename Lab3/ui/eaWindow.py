@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 
-from Lab3.controller.ea.eaController import EAController
+from Lab3.controller.ea.eaSimulation import EASimulation
+from Lab3.controller.ea.validation import Validation
 
 
 class EAWindow(QMainWindow):
@@ -10,8 +11,9 @@ class EAWindow(QMainWindow):
         self.populationSize: QSpinBox = None
         self.mutationChance: QDoubleSpinBox = None
         self.generations: QSpinBox = None
-        self.controller: EAController = None
+        self.controller: EASimulation = None
         self.console: QTextEdit = None
+        self.avg: QLineEdit = None
         self.initUI()
 
     def initUI(self):
@@ -67,6 +69,17 @@ class EAWindow(QMainWindow):
         self.console.setFontPointSize(20)
         layout.addWidget(self.console)
 
+        validationLayout = QHBoxLayout()
+        label5 = QLabel("Average fitness: ")
+        validationLayout.addWidget(label5)
+        self.avg = QLineEdit()
+        self.avg.setEnabled(False)
+        validationLayout.addWidget(self.avg)
+        validationButton = QPushButton("Validation")
+        validationButton.clicked.connect(self.validate)
+        validationLayout.addWidget(validationButton)
+        layout.addLayout(validationLayout)
+
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
@@ -74,7 +87,8 @@ class EAWindow(QMainWindow):
     def beginAlg(self):
         if self.controller is not None:
             self.controller.requestInterruption()
-        self.controller = EAController(self.size.value(), self.populationSize.value(), self.mutationChance.value(), self.generations.value())
+        self.controller = EASimulation(self.size.value(), self.populationSize.value(), self.mutationChance.value(),
+                                       self.generations.value())
         self.controller.progress.connect(self.progress)
         self.controller.start()
 
@@ -89,3 +103,11 @@ class EAWindow(QMainWindow):
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+
+    def validationDone(self, avg, std, graph):
+        self.avg.setValue(str(avg))
+
+    def validate(self):
+        validation = Validation()
+        validation.done.connect(self.validationDone)
+        validation.start()

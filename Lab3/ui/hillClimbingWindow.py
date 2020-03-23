@@ -1,13 +1,13 @@
 from PyQt5.QtWidgets import *
 
-from Lab3.controller.hillClimbing.hillClimbingController import HillClimbingController
+from Lab3.controller.hillClimbing.hillClimbingSimulation import HillClimbingSimulation
 
 
 class HillClimbingWindow(QMainWindow):
     def __init__(self, parent=None):
         super(HillClimbingWindow, self).__init__(parent)
         self.sp: QSpinBox = None
-        self.controller: HillClimbingController = None
+        self.controller: HillClimbingSimulation = None
         self.console: QTextEdit = None
         self.initUI()
 
@@ -44,7 +44,7 @@ class HillClimbingWindow(QMainWindow):
     def beginAlg(self):
         if self.controller is not None:
             self.controller.requestInterruption()
-        self.controller = HillClimbingController(self.sp.value())
+        self.controller = HillClimbingSimulation(self.sp.value())
         self.controller.progress.connect(self.progress)
         self.controller.start()
 

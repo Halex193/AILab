@@ -5,11 +5,11 @@ from Lab3.controller.hillClimbing.state import State
 from random import randint
 
 
-class HillClimbingController(QThread):
+class HillClimbingSimulation(QThread):
     progress = pyqtSignal(float, str)
 
     def __init__(self, n, parent=None):
-        super(HillClimbingController, self).__init__(parent)
+        super(HillClimbingSimulation, self).__init__(parent)
         self.n = n
         self.maxFitness = self.calculateMaxFitness()
         self.state = self.randomState()
