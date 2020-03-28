@@ -9,18 +9,19 @@ class Validation(QThread):
     done = pyqtSignal(float, float, list)
     runs = 30
     populationSize = 40
-    inertia = 0.8
-    cognitive = 1
-    social = 0.5
+    alpha = 0
     boardSize = 4
-    generations = 1000
+    beta = 0.2
+    q0 = 0.1
+    rho = 0.2
+    generations = 30
 
     def __init__(self, parent=None):
         super(Validation, self).__init__(parent)
         self.graph = []
 
     def run(self) -> None:
-        simulations = [ACOSimulation(self.boardSize, self.populationSize, self.inertia, self.cognitive, self.social, self.generations)
+        simulations = [ACOSimulation(self.boardSize, self.populationSize, self.alpha, self.beta, self.q0, self.rho, self.generations)
                        for i in range(self.runs)]
 
         self.graph.append(mean(self.gatherFitness(simulations)))

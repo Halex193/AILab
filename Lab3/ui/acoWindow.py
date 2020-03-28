@@ -3,8 +3,7 @@ from PyQt5.QtWidgets import *
 from pyqtgraph import PlotWidget
 
 from Lab3.simulations.aco.acoSimulation import ACOSimulation
-from Lab3.simulations.pso.psoSimulation import PSOSimulation
-from Lab3.simulations.pso.validation import Validation
+from Lab3.simulations.aco.validation import Validation
 
 # 0, 0.5, 0.8, 0.2
 class ACOWindow(QMainWindow):
@@ -17,7 +16,7 @@ class ACOWindow(QMainWindow):
         self.q0: QDoubleSpinBox = None
         self.rho: QDoubleSpinBox = None
         self.generations: QSpinBox = None
-        self.controller: PSOSimulation = None
+        self.controller: ACOSimulation = None
         self.validation: Validation = None
         self.console: QTextEdit = None
         self.avg: QLineEdit = None
@@ -49,6 +48,7 @@ class ACOWindow(QMainWindow):
 
         label3 = QLabel("Alpha:")
         self.alpha = QDoubleSpinBox()
+        self.alpha.setMinimum(-100)
         self.alpha.setSingleStep(0.1)
         self.alpha.setValue(0.8)
         data.addWidget(label3)
@@ -56,6 +56,7 @@ class ACOWindow(QMainWindow):
 
         label5 = QLabel("Beta:")
         self.beta = QDoubleSpinBox()
+        self.beta.setMinimum(-100)
         self.beta.setSingleStep(0.1)
         self.beta.setValue(0.5)
         data.addWidget(label5)
