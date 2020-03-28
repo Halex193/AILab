@@ -2,6 +2,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from numpy import mean
 from numpy import std
 
+from Lab3.simulations.aco.acoSimulation import ACOSimulation
 from Lab3.simulations.ea.eaSimulation import EASimulation
 
 
@@ -9,8 +10,11 @@ class Validation(QThread):
     done = pyqtSignal(float, float, list)
     runs = 30
     populationSize = 40
-    mutationChance = 0.2
+    alpha = 0.2
     boardSize = 4
+    beta = 0.2
+    q0 = 0.1
+    rho = 0.2
     generations = 1000
 
     def __init__(self, parent=None):
@@ -18,7 +22,7 @@ class Validation(QThread):
         self.graph = []
 
     def run(self) -> None:
-        simulations = [EASimulation(self.boardSize, self.populationSize, self.mutationChance, self.generations)
+        simulations = [ACOSimulation(self.boardSize, self.populationSize, self.aplha, self.beta, self.q0, self.rho, self.generations)
                        for i in range(self.runs)]
 
         self.graph.append(mean(self.gatherFitness(simulations)))

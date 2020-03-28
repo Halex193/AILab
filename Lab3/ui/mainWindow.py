@@ -2,6 +2,7 @@ import sys
 
 from PyQt5.QtWidgets import *
 
+from Lab3.ui.acoWindow import ACOWindow
 from Lab3.ui.eaWindow import EAWindow
 from Lab3.ui.hillClimbingWindow import HillClimbingWindow
 from Lab3.ui.psoWindow import PSOWindow
@@ -30,13 +31,18 @@ class MainWindow(QMainWindow):
         eaButton.setMinimumHeight(100)
         eaButton.clicked.connect(self.openEA)
 
-        psoButton = QPushButton('Particle Swarm Optimisation ')
+        psoButton = QPushButton('Particle Swarm Optimisation')
         psoButton.setMinimumHeight(100)
         psoButton.clicked.connect(self.openPSO)
+
+        acoButton = QPushButton('Ant Colony Optimization')
+        acoButton.setMinimumHeight(100)
+        acoButton.clicked.connect(self.openACO)
 
         layout.addWidget(hillClimbingButton)
         layout.addWidget(eaButton)
         layout.addWidget(psoButton)
+        layout.addWidget(acoButton)
         widget = QWidget()
         widget.setLayout(layout)
         self.setCentralWidget(widget)
@@ -60,6 +66,11 @@ class MainWindow(QMainWindow):
     def openPSO(self):
         self.pso = PSOWindow()
         self.pso.show()
+        self.hide()
+
+    def openACO(self):
+        self.aco = ACOWindow()
+        self.aco.show()
         self.hide()
 
 

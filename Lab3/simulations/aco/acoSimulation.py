@@ -1,67 +1,50 @@
-from copy import deepcopy
-from random import shuffle
-from random import randint
-from random import random
+import itertools
 
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from Lab3.simulations.pso.individual import Individual
+from Lab3.simulations.aco.ant import Ant
 
 
 class ACOSimulation(QThread):
     progress = pyqtSignal(int, float, str)
 
-    def __init__(self, n, populationNumber, inertia, cognitive, social, generations, parent=None):
+    def __init__(self, n, populationNumber, alpha, beta, q0, rho, generations, parent=None):
         super(ACOSimulation, self).__init__(parent)
         self.n = n
-        self.inertia = inertia
-        self.cognitive = cognitive
-        self.social = social
-        self.maxFitness = self.calculateMaxFitness()
         self.populationNumber = populationNumber
-        self.population = self.randomPopulation(populationNumber)
+        self.alpha = alpha
+        self.beta = beta
+        self.q0 = q0
+        self.rho = rho
         self.generations = generations
-        self.best = max([(x, x.fitness(self.maxFitness)) for x in self.population], key=lambda x: x[1])
-        self.generationBest = deepcopy(self.best[0].board)
-
-    def calculateMaxFitness(self):
-        board = []
-        for i in range(self.n):
-            board.append([(1, 1)] * self.n)
-        return Individual(self.n, board, board, 1).penalty()
-
-    def initialVelocity(self):
-        board = []
-        for i in range(self.n):
-            column = []
-            for j in range(self.n):
-                column.append((randint(-2, 2), randint(-2, 2)))
-            board.append(column)
-        return board
-
-    def randomIndividual(self):
-        board = []
-        for i in range(self.n):
-            column = []
-            for j in range(self.n):
-                column.append((randint(1, self.n), randint(1, self.n)))
-            board.append(column)
-        return Individual(self.n, board, self.initialVelocity(), self.maxFitness)
-
-    def randomPopulation(self, number):
-        return [self.randomIndividual() for x in range(number)]
+        self.permutations = [list(x) for x in itertools.permutations([i for i in range(1, self.n + 1)])]
+        self.trace = [[1 for i in range(len(self.permutations))] for j in range(len(self.permutations))]
+        self.best = (0, 0)
+        self.maxFitness = self.calculateMaxFitness()
 
     def nextGeneration(self):
-        fitnessList =[]
-        for i in range(self.populationNumber):
-            self.population[i].move(self.inertia, self.cognitive, self.social, self.generationBest, self.maxFitness)
-            if self.particleStopped(self.population[i]):
-                self.population[i] = self.randomIndividual()
-            fitnessList.append((self.population[i].board, self.population[i].fitness(self.maxFitness)))
-        generationBest = max(fitnessList, key=lambda x: x[1])
-        if generationBest[1] > self.best[1]:
-            self.best = (Individual(self.n, deepcopy(generationBest[0]), self.initialVelocity(), self.maxFitness), generationBest[1])
-        self.generationBest = deepcopy(generationBest[0])
+        antSet = [Ant(self.n, self.permutations) for i in range(self.populationNumber)]
+        for i in range(self.n * 2):
+            for x in antSet:
+                x.makeMove(self.q0, self.trace, self.alpha, self.beta, self.maxFitness)
+        dTrace = [1.0 / antSet[i].fitness(self.maxFitness) for i in range(len(antSet))]
+        for i in range(len(self.permutations)):
+            for j in range(len(self.permutations)):
+                self.trace[i][j] = (1 - self.rho) * self.trace[i][j]
+        for i in range(len(antSet)):
+            for j in range(len(antSet[i].path) - 1):
+                x = antSet[i].path[j]
+                y = antSet[i].path[j + 1]
+                self.trace[x][y] = self.trace[x][y] + dTrace[i]
+        f = [[antSet[i].fitness(self.maxFitness), i] for i in range(len(antSet))]
+        f = max(f)
+        if f[0] > self.best[1]:
+            self.best = (antSet[f[1]], f[0])
+
+    def calculateMaxFitness(self):
+        permutation = [1] * self.n
+        permutationPath = [permutation] * (self.n * 2)
+        return Ant(self.n, self.permutations).penalty(permutationPath)
 
     def run(self):
         generation = 0
@@ -72,12 +55,3 @@ class ACOSimulation(QThread):
                 self.requestInterruption()
                 break
             self.nextGeneration()
-
-    def particleStopped(self, particle):
-        if particle.fitness(self.maxFitness) != 1:
-            return False
-        for i in range(self.n):
-            for j in range(self.n):
-                if particle.velocity[i][j] >= 1 or particle.velocity[i][j] <= -1:
-                    return False
-        return True

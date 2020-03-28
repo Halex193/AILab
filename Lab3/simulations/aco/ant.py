@@ -7,8 +7,14 @@ class Ant:
         self.permutations = permutations
         self.path = [randint(0, len(self.permutations) - 1)]
 
-    def penalty(self):
-        permutationPath = [self.permutations[i] for i in self.path]
+    def fitness(self, maxFitness):
+        fitness = maxFitness
+        fitness -= self.penalty()
+        return fitness / maxFitness
+
+    def penalty(self, permutationPath=None):
+        if permutationPath is None:
+            permutationPath = [self.permutations[i] for i in self.path]
         penalty = 0
         for j in range(self.n):
             penalty += self.checkColumn(j, self.n, 0, permutationPath)
@@ -39,7 +45,7 @@ class Ant:
                     penalty += 1
         return penalty
 
-    def distMove(self, i):
+    def distMove(self, i, maxFitness):
         permutationPath = [self.permutations[i] for i in self.path]
         permutationPath.append(self.permutations[i])
 
@@ -51,28 +57,28 @@ class Ant:
             penalty += self.checkColumn(j, dimension1nrRows, 1, permutationPath)
 
         penalty += self.checkCells(dimension1nrRows, permutationPath)
-        return penalty
+        return (maxFitness - penalty) / maxFitness
 
     def nextMoves(self):
         moves = []
-        for i in range(self.permutations):
+        for i in range(len(self.permutations)):
             if i not in self.path:
                 moves.append(i)
         return moves
 
-    def addMove(self, q0, trace, alpha, beta):
-        p = [self.n ** 2 for i in range(len(self.permutations))]
+    def makeMove(self, q0, trace, alpha, beta, maxFitness):
+        p = [0 for i in range(len(self.permutations))]
         nextSteps = self.nextMoves()
         if len(nextSteps) == 0:
-            return False
+            return
         for i in nextSteps:
-            p[i] = self.distMove(i)
+            p[i] = self.distMove(i, maxFitness)
             if p[i] < 0:
                 raise ArithmeticError()
         p = [(p[i] ** beta) * (trace[self.path[-1]][i] ** alpha) for i in range(len(p))]
         if random() < q0:
             p = [[i, p[i]] for i in range(len(p))]
-            p = min(p, key=lambda a: a[1])
+            p = max(p, key=lambda a: a[1])
             self.path.append(p[0])
         else:
             s = sum(p)
@@ -85,7 +91,6 @@ class Ant:
             while r > p[i]:
                 i = i + 1
             self.path.append(i)
-        return True
 
     def __str__(self):
         permutationPath = [self.permutations[i] for i in self.path]
