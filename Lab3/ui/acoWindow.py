@@ -50,7 +50,7 @@ class ACOWindow(QMainWindow):
         self.alpha = QDoubleSpinBox()
         self.alpha.setMinimum(-100)
         self.alpha.setSingleStep(0.1)
-        self.alpha.setValue(0.8)
+        self.alpha.setValue(0)
         data.addWidget(label3)
         data.addWidget(self.alpha)
 

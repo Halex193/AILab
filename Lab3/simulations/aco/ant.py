@@ -83,7 +83,7 @@ class Ant:
         else:
             s = sum(p)
             if s == 0:
-                return choice(nextSteps)
+                self.path.append(choice(nextSteps))
             p = [p[i] / s for i in range(len(p))]
             p = [sum(p[0:i + 1]) for i in range(len(p))]
             r = random()
