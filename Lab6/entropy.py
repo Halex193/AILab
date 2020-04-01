@@ -1,6 +1,6 @@
-from Lab5.table import *
-from numpy import log2
 import operator
+from numpy import log2
+from Lab6.table import *
 
 
 def selectAttribute(table: Table):
@@ -16,7 +16,7 @@ def selectAttribute(table: Table):
                 continue
             entropySum += len(partition) / len(table) * entropy(partition)
         gains[attribute] = ES - entropySum
-    return max(gains.items(), key=operator.itemgetter(1))[0]
+    return min(gains.items(), key=operator.itemgetter(1))[0]
 
 
 def entropy(table):

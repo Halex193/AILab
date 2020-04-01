@@ -1,12 +1,11 @@
-from Lab5.fileOperations import readData
-from Lab5.table import Table, allAttributes
-from Lab5.tree import Tree
 from random import sample
 
-testPercent = 0.2
+from Lab6.fileOperations import readData
+from Lab6.table import Table, allAttributes
+from Lab6.tree import Tree
 
 
-def run():
+def run(testPercent):
     data = readData()
     allRows = [i for i in range(len(data))]
     testRowsNumber = int(testPercent * len(allRows))
@@ -22,10 +21,12 @@ def run():
             successes += 1
     return successes / testRowsNumber
 
-def test():
+
+def test(testPercent):
     runs = 1000
-    print("Starting test...")
-    print(str(max([run() for i in range(runs)])))
+    runResults = [run(testPercent) for i in range(runs)]
+    print(str(max(runResults)))
+
 
 if __name__ == '__main__':
-    test()
+    test(0.1)

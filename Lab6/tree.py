@@ -1,6 +1,6 @@
-from Lab5.entropy import selectAttribute
-from Lab5.node import Node
-from Lab5.table import Table, classAttribute, attributeValues
+from Lab6.entropy import selectAttribute
+from Lab6.node import Node
+from Lab6.table import Table, classAttribute, attributeValues
 
 
 class Tree:

@@ -1,6 +1,6 @@
 import csv
 
-from Lab5.table import classAttribute, allAttributes
+from Lab6.table import classAttribute, allAttributes
 
 
 def readData():
