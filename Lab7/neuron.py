@@ -1,6 +1,5 @@
-from random import uniform
-
 from Lab7.table import attributeNumber, classIndex
+from random import uniform
 
 
 class Neuron:
@@ -8,29 +7,34 @@ class Neuron:
     def __init__(self, table, learningRate):
         self.data = table
         self.learningRate = learningRate
-        self.weight = [uniform(0, 1) for i in range(attributeNumber)]
+        self.beta = [0] * (attributeNumber + 1)
 
-    def train(self) -> float:
-        highestError = 0
-        weightDifference = [0] * attributeNumber
+    def train(self) -> str:
+        N = len(self.data)
+        gradient = [0] * (attributeNumber + 1)
+        totalError = 0
         for row in self.data:
             output = self.computeOutput(row)
             error = row[classIndex] - output
-            errorPercent = abs(error) / abs(output)
+            totalError += error
             for i in range(attributeNumber):
-                weightDifference[i] += self.learningRate * error * row[i]
-
-            if errorPercent > highestError:
-                highestError = errorPercent
+                gradient[i] += -(2 / N) * error * row[i]
+            gradient[attributeNumber] += -(2 / N) * error
         for i in range(attributeNumber):
-            self.weight[i] += weightDifference[i]
-        return highestError
+            self.beta[i] -= self.learningRate * gradient[i]
+        self.beta[attributeNumber] -= self.learningRate * gradient[attributeNumber]
+        if totalError == 0:
+            return "no error | f(x) = " + self.functionStr()
+        return "error=" + "{:.2f}".format(totalError / float(len(self.data))) + " | f(x) = " + self.functionStr()
 
     def computeOutput(self, row) -> float:
-        weightedSum = 0
+        result = self.beta[attributeNumber]
         for i in range(attributeNumber):
-            weightedSum += self.weight[i] * row[i]
-        return weightedSum
+            result += self.beta[i] * row[i]
+        return result
 
-    def derivative(self, t, o, w):
-        return (t - o) * w
+    def functionStr(self):
+        strings = ["{:.2f}".format(self.beta[attributeNumber])]
+        for i in range(attributeNumber):
+            strings.append("{:.2f}".format(self.beta[i]) + "*x" + str(i+1))
+        return " + ".join(strings)

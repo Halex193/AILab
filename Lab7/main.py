@@ -8,8 +8,10 @@ def run(learningRate, iterations):
 
     print('Training started...')
     for i in range(iterations):
-        print("Iteration + " + str(i) + " error: " + str(neuron.train()))
+        output = neuron.train()
+        if i % 100 == 0:
+            print("Iteration " + str(i) + ": " + output)
 
 
 if __name__ == '__main__':
-    run(0.5, 100)
+    run(0.0001, 50000)
