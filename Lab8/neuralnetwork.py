@@ -16,7 +16,7 @@ class NeuralNetwork:
     def __init__(self, table, learningRate, hiddenNeurons):
         self.data = table
         self.learningRate = learningRate
-        self.input = np.array([row[:attributeNumber - 1] for row in table])
+        self.input = np.array([row[:attributeNumber] for row in table])
         self.weights1 = np.random.rand(self.input.shape[1], hiddenNeurons)
         self.weights2 = np.random.rand(hiddenNeurons, 1)
         self.y = np.array([[row[classIndex] for row in table]]).T
