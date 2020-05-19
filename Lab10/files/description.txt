@@ -1,0 +1,17 @@
+Sugeno model, Centroid Area
+
+Examples
+
+Input: temperature 10°C, humidity 80%
+Probabilities for each temperature class: {'very-cold': 0, 'cold': 0, 'normal': 1, 'warm': 0, 'hot': 0}
+Probabilities for each humidity class: {'dry': 0, 'normal': 0.4, 'wet': 0.6}
+Probability for each time class: {'short': 0.6, 'medium': 0.4, 'long': 0}
+Probability for each temperature: [(0, 0.6), (50, 0.4), (100, 0)]
+Result: 20.0 minutes
+
+Input: temperature -14°C, humidity 27%
+Probabilities for each temperature class: {'very-cold': 0.76, 'cold': 0, 'normal': 0, 'warm': 0, 'hot': 0}
+Probabilities for each humidity class: {'dry': 0.46, 'normal': 0.54, 'wet': 0}
+Probability for each time class: {'short': 0.54, 'medium': 0.46, 'long': 0}
+Probability for each temperature: [(0, 0.54), (50, 0.46), (100, 0)]
+Result: 23.0 minutes
