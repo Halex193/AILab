@@ -27,8 +27,13 @@ def writeOutput(output):
         file.write(output)
 
 
-def serializePopulation(population):
-    with open("files/population.bin", "bw") as file:
+def appendStatus(status):
+    with open("files/status.out", "a") as file:
+        file.write(status)
+
+
+def serializePopulation(population, ending):
+    with open("files/population" + ending + ".bin", "bw") as file:
         pickle.dump(population, file)
 
 

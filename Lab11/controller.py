@@ -30,11 +30,11 @@ class Population:
         self.population = [x[0] for x in fitnessEvaluation[:self.populationSize]]
         return fitnessEvaluation[0][1] / len(self.trainingData)
 
-    def predict(self, input) -> string:
+    def predict(self, inputData) -> string:
         fitnessEvaluation = [(chromosome, chromosome.fitness) for chromosome in self.population]
         fitnessEvaluation = sorted(fitnessEvaluation, key=lambda x: x[1])
         bestChromosome = fitnessEvaluation[0][0]
-        output = int(bestChromosome.evaluateExpression(0, input)[0])
+        output = int(bestChromosome.evaluateExpression(0, inputData)[0])
         if output > 3:
             return 'No class chosen'
         return outputClassesList[output]
