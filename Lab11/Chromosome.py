@@ -15,9 +15,9 @@ functionImplementations = {
 functionNumber = 5
 outputClasses = {
     'Slight-Left-Turn': 0,
-    'Move-Forward': 10,
-    'Slight-Right-Turn': 20,
-    'Sharp-Right-Turn': 30
+    'Move-Forward': 1,
+    'Slight-Right-Turn': 2,
+    'Sharp-Right-Turn': 3
 
 }
 outputClassesList = [
@@ -95,7 +95,7 @@ def crossover(parent1, parent2):
 
 def mutation(chromosome):
     result = Chromosome()
-    position = randint(0, chromosome.size)
+    position = randint(0, chromosome.size - 1)
     result.representation = chromosome.representation[:]
     result.size = chromosome.size
     if result.representation[position] > 0:  # terminal

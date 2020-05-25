@@ -8,7 +8,7 @@ if __name__ == '__main__':
     for i in range(epochs):
         error = population.train()
         print("Epoch {} - {:.3f}".format(i, error))
-        if error < 4:
+        if error < 0.4:
             serializePopulation(population)
             break
     testData = readInput()
@@ -17,4 +17,4 @@ if __name__ == '__main__':
         output = population.predict(testData[i])
         print()
         allOutput.append(output)
-    writeOutput(''.join(allOutput))
+    writeOutput('\n'.join(allOutput))

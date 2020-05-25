@@ -34,7 +34,7 @@ class Population:
         fitnessEvaluation = [(chromosome, chromosome.fitness) for chromosome in self.population]
         fitnessEvaluation = sorted(fitnessEvaluation, key=lambda x: x[1])
         bestChromosome = fitnessEvaluation[0][0]
-        output = int(bestChromosome.evaluateExpression(0, input))
+        output = int(bestChromosome.evaluateExpression(0, input)[0])
         if output > 3:
             return 'No class chosen'
         return outputClassesList[output]

@@ -28,10 +28,10 @@ def writeOutput(output):
 
 
 def serializePopulation(population):
-    with open("files/output.out", "b") as file:
+    with open("files/population.bin", "bw") as file:
         pickle.dump(population, file)
 
 
 def deserializePopulation():
-    with open("files/population3.bin", "b") as file:
+    with open("files/population.bin", "br") as file:
         return pickle.load(file)
