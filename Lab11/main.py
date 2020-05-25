@@ -9,7 +9,7 @@ if __name__ == '__main__':
         error = population.train()
         message = "Epoch {} - {:.3f}".format(i, error)
         print(message)
-        appendStatus(message)
+        appendStatus(message + "\n")
         i += 1
         if error < 0.1:
             serializePopulation(population, "1")
